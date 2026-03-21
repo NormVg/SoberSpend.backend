@@ -1,20 +1,42 @@
-# Environment files
-.env
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
 
-# Python cache and virtual env
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Old Python backend files (migrated to Nuxt)
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 .venv/
-
-# Local database artifacts
 *.db
+
+# Old backend (separate repository)
+old.backend/
 
 # Local receipt/test images
 *.png
 
-# Editor and OS files
+# Editor files
 .vscode/
-.DS_Store
 Thumbs.db
