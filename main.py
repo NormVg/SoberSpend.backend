@@ -132,6 +132,9 @@ async def analyze_receipt(
         )
     except GeminiServiceError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+    except Exception as exc:
+        # Handles provider-side failures (network, model, transient errors) without exposing a 500.
+        raise HTTPException(status_code=502, detail=f"AI provider error: {exc}") from exc
 
     db.table("Transactions").insert(
         {
