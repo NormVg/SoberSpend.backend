@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import base64
 import json
 import os
 from datetime import datetime
 from typing import Literal
 
-from google import genai
-from google.genai import types
+import httpx
 from pydantic import BaseModel, Field, ValidationError
+
+from prompt_builder import build_system_prompt
 
 
 class TransactionContext(BaseModel):
@@ -38,40 +40,25 @@ def _build_transactions_context(recent_transactions: list[TransactionContext]) -
     return "\n".join(lines)
 
 
-def _build_system_prompt(bad_habits_prompt: str, recent_transactions: list[TransactionContext]) -> str:
-    history = _build_transactions_context(recent_transactions)
-    return f"""
-You are SoberSpend AI, a harsh and sarcastic financial accountability coach.
-
-Your job:
-1) Read the uploaded receipt image and extract spending details.
-2) Roast the user in a witty, aggressive style.
-3) Personalize the roast using BOTH:
-   - User's confessed bad habits
-   - Their recent transaction history
-
-User confessed bad habits:
-{bad_habits_prompt}
-
-Recent transaction history:
-{history}
-
-Output rules:
-- Return JSON only.
-- total_spent: integer amount from the current receipt.
-- category: best category for this receipt (food, shopping, travel, etc.).
-- budget_status: one of safe, warning, danger.
-- ai_roast: 1-3 lines, sharp and funny, directly referencing bad habits and spending history.
-- No hate speech or slurs.
-- Do not include markdown.
-""".strip()
+def _get_ollama_config() -> tuple[str, str]:
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+    model_name = os.getenv("OLLAMA_MODEL", "llava")
+    return base_url.rstrip("/"), model_name
 
 
-def _get_genai_client() -> genai.Client:
-    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        raise GeminiServiceError("Missing GEMINI_API_KEY (or GOOGLE_API_KEY) environment variable.")
-    return genai.Client(api_key=api_key)
+def _extract_json_text(content: object) -> str:
+    if isinstance(content, str):
+        return content.strip()
+
+    if isinstance(content, list):
+        chunks: list[str] = []
+        for item in content:
+            if isinstance(item, dict):
+                if item.get("type") == "text" and isinstance(item.get("text"), str):
+                    chunks.append(item["text"])
+        return "\n".join(chunks).strip()
+
+    return ""
 
 
 def analyze_receipt_with_context(
@@ -79,33 +66,57 @@ def analyze_receipt_with_context(
     bad_habits_prompt: str,
     recent_transactions: list[TransactionContext],
     mime_type: str = "image/jpeg",
-    model_name: str = "gemini-2.0-flash",
+    model_name: str | None = None,
 ) -> RoastAnalysisResponse:
-    client = _get_genai_client()
-    system_prompt = _build_system_prompt(bad_habits_prompt, recent_transactions)
+    base_url, default_model = _get_ollama_config()
+    resolved_model = model_name or default_model
+    transactions_context = _build_transactions_context(recent_transactions)
+    system_prompt = build_system_prompt(
+        bad_habits_prompt=bad_habits_prompt,
+        transactions_context=transactions_context,
+    )
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
-    response = client.models.generate_content(
-        model=model_name,
-        contents=[
-            types.Part.from_text(text=system_prompt),
-            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-        ],
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=RoastAnalysisResponse,
-            temperature=0.7,
-        ),
+    json_contract_hint = (
+        "Return only strict JSON with keys: total_spent (int), category (string), "
+        "budget_status (safe|warning|danger), ai_roast (string)."
     )
 
-    parsed = getattr(response, "parsed", None)
-    if isinstance(parsed, RoastAnalysisResponse):
-        return parsed
+    payload = {
+        "model": resolved_model,
+        "messages": [
+            {
+                "role": "user",
+                "content": f"{system_prompt}\n\n{json_contract_hint}",
+                "images": [image_b64],
+            }
+        ],
+        "stream": False,
+        "temperature": 0.7,
+        "format": "json",
+    }
 
-    if isinstance(parsed, dict):
-        return RoastAnalysisResponse.model_validate(parsed)
+    with httpx.Client(timeout=90.0) as client:
+        response = client.post(
+            f"{base_url}/api/chat",
+            headers={"Content-Type": "application/json"},
+            json=payload,
+        )
 
-    raw_text = response.text or ""
+    if response.status_code >= 400:
+        raise GeminiServiceError(
+            f"Ollama error {response.status_code}: {response.text}"
+        )
+
+    result = response.json()
+    message = result.get("message") or {}
+    raw_text = _extract_json_text(message.get("content"))
+
+    if raw_text.startswith("```"):
+        raw_text = raw_text.strip("`")
+        raw_text = raw_text.replace("json\n", "", 1).strip()
+
     try:
         return RoastAnalysisResponse.model_validate(json.loads(raw_text))
     except (json.JSONDecodeError, ValidationError) as exc:
-        raise GeminiServiceError(f"Gemini returned invalid structured output: {raw_text}") from exc
+        raise GeminiServiceError(f"Ollama returned invalid structured output: {raw_text}") from exc
