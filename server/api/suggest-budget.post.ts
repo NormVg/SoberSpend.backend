@@ -104,19 +104,26 @@ function suggestAll(profile: {
   savings_rate: string | null
   monthly_budget: number | null
   primary_goal: string | null
+  override_budget: number | null
 }) {
   const base = profile.monthly_budget || 30000
   const personality = profile.financial_personality || 'Balanced'
   const savingsRate = profile.savings_rate || '10-20%'
   const weaknesses = profile.spending_weakness || []
 
-  // Budget adjustment multiplier based on personality
-  let budgetMultiplier = 1.0
-  if (personality === 'Spender') budgetMultiplier = 0.85
-  else if (personality === 'Saver') budgetMultiplier = 0.90
-  if (weaknesses.length >= 3) budgetMultiplier -= 0.05
+  let suggestedBudget = base;
 
-  const suggestedBudget = Math.max(Math.round((base * budgetMultiplier) / 500) * 500, 5000)
+  if (profile.override_budget) {
+    suggestedBudget = profile.override_budget;
+  } else {
+    // Budget adjustment multiplier based on personality
+    let budgetMultiplier = 1.0
+    if (personality === 'Spender') budgetMultiplier = 0.85
+    else if (personality === 'Saver') budgetMultiplier = 0.90
+    if (weaknesses.length >= 3) budgetMultiplier -= 0.05
+
+    suggestedBudget = Math.max(Math.round((base * budgetMultiplier) / 500) * 500, 5000)
+  }
 
   // Savings target from savings_rate string
   let savingsFraction = 0.15
@@ -140,7 +147,7 @@ function suggestAll(profile: {
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { user_id } = body
+  const { user_id, override_budget } = body
 
   if (!user_id) {
     throw createError({ statusCode: 400, message: 'user_id is required' })
@@ -163,6 +170,7 @@ export default defineEventHandler(async (event) => {
     savings_rate: user.savings_rate,
     monthly_budget: user.monthly_budget ? Number(user.monthly_budget) : null,
     primary_goal: user.primary_goal,
+    override_budget: override_budget ? Number(override_budget) : null,
   })
 
   return {
