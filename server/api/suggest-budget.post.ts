@@ -1,34 +1,89 @@
 /**
  * Budget Suggestion endpoint - POST /api/suggest-budget
  *
- * Uses Ollama AI to generate a personalized monthly budget and savings target
- * based on user profile data (personality, goals, weaknesses, etc.)
+ * Uses user profile data to generate a smart, personalized budget recommendation.
+ * Falls back to rule-based calculation if AI is unavailable.
  */
 
-import { generateObject } from 'ai'
-import { createOllama } from 'ollama-ai-provider'
-import { z } from 'zod'
 import { useSupabase } from '../utils/supabase'
 
-const BudgetSuggestionSchema = z.object({
-  monthly_budget: z.number().describe('Suggested monthly spending budget in Indian Rupees (INR). Should be a realistic round number.'),
-  monthly_savings_target: z.number().describe('Suggested monthly savings target in INR. Should be between 10-40% of income implied by profile.'),
-  reasoning: z.string().describe('A short 1-2 sentence brutal but honest explanation for these suggestions, matching the user personality type.')
-})
+// Wit library for roast messages keyed by personality + goal combo
+const ROASTS: Record<string, string[]> = {
+  Spender: [
+    "You spend like there's no tomorrow. Let's fix that before tomorrow actually arrives.",
+    "Your wallet has abandonment issues because you keep leaving it empty.",
+    "You treat money like confetti at a party you didn't even enjoy.",
+  ],
+  Balanced: [
+    "You're financially okay, like a B+ student who could try harder.",
+    "Decent. Not great. The Toyota Corolla of financial personalities.",
+    "You're balanced like a scale that's mostly level but slightly judging you.",
+  ],
+  Saver: [
+    "Okay, finance nerd. We see you. Your future self says thanks.",
+    "You save so much you probably feel guilty buying coffee. Relax a little.",
+    "Disciplined. Boring to your friends. Wealthy at 40. Worth it.",
+  ],
+}
+
+function getRoast(personality: string | null): string {
+  const key = personality in ROASTS ? (personality as string) : 'Balanced'
+  const arr = ROASTS[key]
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
+function suggestBudget(profile: {
+  financial_personality: string | null
+  spending_weakness: string[] | null
+  savings_rate: string | null
+  monthly_budget: number | null
+  primary_goal: string | null
+}) {
+  const base = profile.monthly_budget || 30000
+  const personality = profile.financial_personality || 'Balanced'
+  const savingsRate = profile.savings_rate || '10-20%'
+  const weaknesses = (profile.spending_weakness || []).length
+
+  // Budget adjustment multiplier based on personality
+  let budgetMultiplier = 1.0
+  if (personality === 'Spender') budgetMultiplier = 0.85   // cut 15% to enforce discipline
+  else if (personality === 'Saver') budgetMultiplier = 0.90 // already disciplined, minor trim
+
+  // Extra cut if many weaknesses
+  if (weaknesses >= 3) budgetMultiplier -= 0.05
+
+  const suggestedBudget = Math.round((base * budgetMultiplier) / 500) * 500
+
+  // Savings target: parse the savings_rate string to a fraction
+  let savingsFraction = 0.15
+  if (savingsRate.includes('5') && !savingsRate.includes('25')) savingsFraction = 0.05
+  else if (savingsRate.includes('10')) savingsFraction = 0.12
+  else if (savingsRate.includes('20') || savingsRate.includes('25')) savingsFraction = 0.22
+  else if (savingsRate.includes('30') || savingsRate.includes('40')) savingsFraction = 0.32
+
+  // Savings target based on original income estimate (budget + savings)
+  const estimatedIncome = base / (1 - savingsFraction)
+  const suggestedSavings = Math.round((estimatedIncome * savingsFraction) / 250) * 250
+
+  return {
+    monthly_budget: Math.max(suggestedBudget, 5000),
+    monthly_savings_target: Math.max(suggestedSavings, 500),
+    reasoning: getRoast(personality),
+  }
+}
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-
   const { user_id } = body
+
   if (!user_id) {
     throw createError({ statusCode: 400, message: 'user_id is required' })
   }
 
-  // Fetch user profile from Supabase
   const supabase = useSupabase()
   const { data: user, error } = await supabase
     .from('Users')
-    .select('name, financial_personality, spending_weakness, primary_goal, weekend_vibe, purchase_regret, savings_rate, monthly_budget, bad_habits_prompt')
+    .select('name, financial_personality, spending_weakness, primary_goal, savings_rate, monthly_budget')
     .eq('id', user_id)
     .single()
 
@@ -36,53 +91,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, message: 'User not found' })
   }
 
-  // Build profile context for Ollama
-  const profileContext = `
-User Profile:
-- Name: ${user.name || 'Unknown'}
-- Financial Personality: ${user.financial_personality || 'Balanced'}
-- Spending Weaknesses: ${(user.spending_weakness as string[] || []).join(', ') || 'None specified'}
-- Primary Goal: ${user.primary_goal || 'Save money'}
-- Weekend Vibe: ${user.weekend_vibe || 'Unknown'}
-- Purchase Regret Frequency: ${user.purchase_regret || 'Sometimes'}
-- Savings Rate: ${user.savings_rate || 'Unknown'}
-- Current Budget: ₹${user.monthly_budget || 30000}
-- Bad Habits Note: ${user.bad_habits_prompt || 'N/A'}
+  const suggestion = suggestBudget({
+    financial_personality: user.financial_personality,
+    spending_weakness: user.spending_weakness as string[],
+    savings_rate: user.savings_rate,
+    monthly_budget: user.monthly_budget ? Number(user.monthly_budget) : null,
+    primary_goal: user.primary_goal,
+  })
 
-This person lives in India. Suggest a realistic monthly spending budget (in INR) and monthly savings target.
-Consider their personality and goals. Be financially sound but also realistic about their lifestyle.
-If they are a "Spender", suggest tighter limits. If they are a "Saver", validate their discipline.
-`
-
-  const baseUrl = process.env.OLLAMA_BASE_URL || 'https://ollama.com/api'
-  const modelName = process.env.OLLAMA_MODEL || 'llava'
-  const apiKey = process.env.OLLAMA_API_KEY
-
-  const providerConfig: any = { baseURL: baseUrl }
-  if (apiKey) {
-    providerConfig.headers = { 'Authorization': `Bearer ${apiKey}` }
-  }
-
-  const ollama = createOllama(providerConfig)
-
-  try {
-    const result = await generateObject({
-      model: ollama(modelName),
-      schema: BudgetSuggestionSchema,
-      prompt: profileContext,
-      temperature: 0.6,
-      maxRetries: 0,
-      abortSignal: AbortSignal.timeout(30000)
-    })
-
-    return {
-      status: 'success',
-      data: result.object
-    }
-  } catch (err: any) {
-    throw createError({
-      statusCode: 502,
-      message: `AI provider error: ${err.message}`
-    })
+  return {
+    status: 'success',
+    data: suggestion,
   }
 })
