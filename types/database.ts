@@ -20,6 +20,8 @@ export interface Database {
           weekend_vibe?: string | null
           purchase_regret?: string | null
           savings_rate?: string | null
+          monthly_savings_target?: number | null
+          category_limits?: any | null
         }
         Insert: {
           id: string
@@ -32,6 +34,8 @@ export interface Database {
           weekend_vibe?: string | null
           purchase_regret?: string | null
           savings_rate?: string | null
+          monthly_savings_target?: number | null
+          category_limits?: any | null
         }
         Update: {
           id?: string
@@ -44,27 +48,63 @@ export interface Database {
           weekend_vibe?: string | null
           purchase_regret?: string | null
           savings_rate?: string | null
+          monthly_savings_target?: number | null
+          category_limits?: any | null
         }
       }
       Transactions: {
         Row: {
-          id: number
+          id: string
           user_id: string
           amount: number
           category: string
+          merchant: string
+          note?: string | null
           timestamp: string
         }
         Insert: {
+          id: string
           user_id: string
           amount: number
           category: string
+          merchant: string
+          note?: string | null
           timestamp?: string
         }
         Update: {
+          id?: string
           user_id?: string
           amount?: number
           category?: string
+          merchant?: string
+          note?: string | null
           timestamp?: string
+        }
+      }
+      Wishlists: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          price: number
+          category_id?: string | null
+          added_at: string
+        }
+        Insert: {
+          id: string
+          user_id: string
+          name: string
+          price: number
+          category_id?: string | null
+          added_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          price?: number
+          category_id?: string | null
+          added_at?: string
         }
       }
     }
