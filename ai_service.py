@@ -61,6 +61,20 @@ def _extract_json_text(content: object) -> str:
     return ""
 
 
+def _normalize_analysis_payload(payload: dict[str, object]) -> dict[str, object]:
+    normalized = dict(payload)
+
+    budget_status = normalized.get("budget_status")
+    if isinstance(budget_status, str):
+        normalized["budget_status"] = budget_status.strip().lower()
+
+    category = normalized.get("category")
+    if isinstance(category, str):
+        normalized["category"] = category.strip().lower()
+
+    return normalized
+
+
 def analyze_receipt_with_context(
     image_bytes: bytes,
     bad_habits_prompt: str,
@@ -94,6 +108,9 @@ def analyze_receipt_with_context(
         "stream": False,
         "temperature": 0.7,
         "format": "json",
+        "options": {
+            "num_gpu": 0,
+        },
     }
 
     with httpx.Client(timeout=90.0) as client:
@@ -117,6 +134,9 @@ def analyze_receipt_with_context(
         raw_text = raw_text.replace("json\n", "", 1).strip()
 
     try:
-        return RoastAnalysisResponse.model_validate(json.loads(raw_text))
+        decoded = json.loads(raw_text)
+        if isinstance(decoded, dict):
+            decoded = _normalize_analysis_payload(decoded)
+        return RoastAnalysisResponse.model_validate(decoded)
     except (json.JSONDecodeError, ValidationError) as exc:
         raise GeminiServiceError(f"Ollama returned invalid structured output: {raw_text}") from exc
