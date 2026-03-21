@@ -7,8 +7,8 @@
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 15.2, 15.3, 15.4
  */
 
-import { OnboardingSchema } from '~/schemas/onboarding'
-import { useSupabase } from '~/server/utils/supabase'
+import { OnboardingSchema } from '../schemas/onboarding'
+import { useSupabase } from '../utils/supabase'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {

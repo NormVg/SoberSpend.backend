@@ -5,7 +5,7 @@
  * including user bad habits, recent transaction history, and output format instructions.
  */
 
-import type { Transaction } from '~/types/api'
+import type { Transaction } from '../../types/api'
 
 /**
  * Builds a complete system prompt for AI receipt analysis

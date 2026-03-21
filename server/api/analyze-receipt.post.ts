@@ -8,7 +8,7 @@
  *               9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 15.2, 15.3, 15.4
  */
 
-import type { AnalysisResponse } from '~/types/api'
+import type { AnalysisResponse } from '../../types/api'
 
 export default defineEventHandler(async (event): Promise<AnalysisResponse> => {
   // Parse multipart form data

@@ -7,10 +7,10 @@
  * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 7.1, 7.2, 7.3, 7.4
  */
 
-import { ollama } from 'ollama-ai-provider-v2'
+import { createOllama } from 'ollama-ai-provider'
 import { generateObject } from 'ai'
-import { AnalysisOutputSchema } from '~/schemas/analysis'
-import type { Transaction } from '~/types/api'
+import { AnalysisOutputSchema } from '../schemas/analysis'
+import type { Transaction } from '../../types/api'
 
 /**
  * Parameters for AI receipt analysis
@@ -52,7 +52,8 @@ export async function analyzeReceiptWithAI(params: AnalyzeReceiptParams) {
     }
   }
 
-  const provider = ollama(modelName, providerConfig)
+  const ollama = createOllama(providerConfig)
+  const model = ollama(modelName)
 
   // Build context-aware prompt using prompt-builder utility
   const prompt = buildPrompt(
@@ -60,14 +61,14 @@ export async function analyzeReceiptWithAI(params: AnalyzeReceiptParams) {
     params.recentTransactions
   )
 
-  // Encode image bytes as base64 data URL
+  // Encode image bytes as base64 data URL for AI SDK
   const imageBase64 = params.imageBytes.toString('base64')
   const imageDataUrl = `data:${params.mimeType};base64,${imageBase64}`
 
   try {
     // Call generateObject with schema validation, temperature 0.7, and 90-second timeout
     const result = await generateObject({
-      model: provider,
+      model: model,
       schema: AnalysisOutputSchema,
       messages: [
         {
