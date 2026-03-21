@@ -2,7 +2,15 @@
 
 create table if not exists public."Users" (
     id text primary key,
-    bad_habits_prompt text not null
+    bad_habits_prompt text not null,
+    name text,
+    monthly_budget numeric,
+    financial_personality text,
+    spending_weakness text[],
+    primary_goal text,
+    weekend_vibe text,
+    purchase_regret text,
+    savings_rate text
 );
 
 create table if not exists public."Transactions" (

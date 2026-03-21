@@ -12,14 +12,38 @@ export interface Database {
         Row: {
           id: string
           bad_habits_prompt: string
+          name?: string | null
+          monthly_budget?: number | null
+          financial_personality?: string | null
+          spending_weakness?: string[] | null
+          primary_goal?: string | null
+          weekend_vibe?: string | null
+          purchase_regret?: string | null
+          savings_rate?: string | null
         }
         Insert: {
           id: string
           bad_habits_prompt: string
+          name?: string | null
+          monthly_budget?: number | null
+          financial_personality?: string | null
+          spending_weakness?: string[] | null
+          primary_goal?: string | null
+          weekend_vibe?: string | null
+          purchase_regret?: string | null
+          savings_rate?: string | null
         }
         Update: {
           id?: string
           bad_habits_prompt?: string
+          name?: string | null
+          monthly_budget?: number | null
+          financial_personality?: string | null
+          spending_weakness?: string[] | null
+          primary_goal?: string | null
+          weekend_vibe?: string | null
+          purchase_regret?: string | null
+          savings_rate?: string | null
         }
       }
       Transactions: {

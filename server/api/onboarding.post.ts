@@ -7,9 +7,9 @@
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 15.2, 15.3, 15.4
  */
 
+import { z } from 'zod'
 import { OnboardingSchema } from '../schemas/onboarding'
 import { useSupabase } from '../utils/supabase'
-import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
   // Read and parse request body
@@ -38,7 +38,15 @@ export default defineEventHandler(async (event) => {
     .from('Users')
     .upsert({
       id: payload.user_id,
-      bad_habits_prompt: payload.bad_habits_prompt
+      bad_habits_prompt: payload.bad_habits_prompt,
+      name: payload.name,
+      monthly_budget: payload.monthly_budget,
+      financial_personality: payload.financial_personality,
+      spending_weakness: payload.spending_weakness,
+      primary_goal: payload.primary_goal,
+      weekend_vibe: payload.weekend_vibe,
+      purchase_regret: payload.purchase_regret,
+      savings_rate: payload.savings_rate
     })
 
   if (error) {
