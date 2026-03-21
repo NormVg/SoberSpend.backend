@@ -64,11 +64,7 @@ export default defineEventHandler(async (event): Promise<AnalysisResponse> => {
     recentTransactions: userContext.transactions
   })
 
-  // Save transaction using transaction-saver utility
-  await saveTransaction(userId, {
-    total_spent: analysis.total_spent,
-    category: analysis.category
-  })
+  // Transaction saving is now handled explicitly by the mobile client after user review.
 
   // Return JSON with status "success" and data object containing normalized analysis results
   // Normalize category and budget_status to lowercase
