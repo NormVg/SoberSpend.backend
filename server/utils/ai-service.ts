@@ -38,11 +38,21 @@ interface AnalyzeReceiptParams {
  */
 export async function analyzeReceiptWithAI(params: AnalyzeReceiptParams) {
   // Read configuration from environment with defaults
-  const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434'
+  const baseUrl = process.env.OLLAMA_BASE_URL || 'https://ollama.com/api'
   const modelName = process.env.OLLAMA_MODEL || 'llava'
+  const apiKey = process.env.OLLAMA_API_KEY
 
-  // Configure Ollama provider with base URL
-  const provider = ollama(modelName, { baseURL: baseUrl })
+  // Configure Ollama provider with base URL and optional API key
+  const providerConfig: any = { baseURL: baseUrl }
+
+  // Add API key to headers if provided (required for cloud service)
+  if (apiKey) {
+    providerConfig.headers = {
+      'Authorization': `Bearer ${apiKey}`
+    }
+  }
+
+  const provider = ollama(modelName, providerConfig)
 
   // Build context-aware prompt using prompt-builder utility
   const prompt = buildPrompt(
