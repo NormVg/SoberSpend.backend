@@ -61,6 +61,22 @@
       </div>
     </section>
 
+    <!-- APP GALLERY -->
+    <section class="gallery-section">
+      <div class="gallery-inner">
+        <h2 class="section-title">See the <span class="cyan">Reality.</span></h2>
+        <div class="gallery-scroll">
+          <img src="/show/screen-1.jpg" alt="App Screenshot 1" class="gallery-img" />
+          <img src="/show/screen-3.jpg" alt="App Screenshot 3" class="gallery-img" />
+          <img src="/show/screen-4.jpg" alt="App Screenshot 4" class="gallery-img" />
+          <img src="/show/screen-5.jpg" alt="App Screenshot 5" class="gallery-img" />
+          <img src="/show/screen-6.jpg" alt="App Screenshot 6" class="gallery-img" />
+          <img src="/show/screen-7.jpg" alt="App Screenshot 7" class="gallery-img" />
+          <img src="/show/screen-8.jpg" alt="App Screenshot 8" class="gallery-img" />
+        </div>
+      </div>
+    </section>
+
     <!-- RISK BADGES (visual flair) -->
     <section class="risk-section">
       <p class="risk-label">YOUR RISK LEVEL RIGHT NOW:</p>
@@ -345,6 +361,42 @@ body {
 .risk-tag.chill {
   background: #00FFFF;
   color: #111;
+}
+
+/* APP GALLERY */
+.gallery-section {
+  padding: 48px 48px 80px;
+  background: var(--surface);
+  border-top: 3px solid var(--black);
+  border-bottom: 3px solid var(--black);
+  margin-bottom: 80px;
+}
+
+.gallery-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.gallery-scroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 24px 0 48px;
+  scrollbar-width: none;
+}
+
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-img {
+  height: 500px;
+  width: auto;
+  border: 4px solid var(--black);
+  border-radius: 24px;
+  box-shadow: 6px 6px 0 var(--black);
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 /* VIDEO MODAL */
