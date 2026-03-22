@@ -217,20 +217,29 @@ body {
 /* HERO */
 .hero {
   padding: 80px 48px 48px;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   text-align: left;
-  gap: 48px;
+  gap: 64px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-graphics {
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
   .hero {
     flex-direction: column-reverse;
     text-align: center;
-    padding: 60px 24px 40px;
+    padding: 40px 24px 40px;
+    gap: 32px;
   }
 }
 
@@ -238,9 +247,9 @@ body {
   width: 180px;
   height: 180px;
   margin: 0;
-  border: 6px solid var(--black);
+  border: 4px solid var(--black);
   border-radius: 40px;
-  box-shadow: 8px 8px 0 var(--black);
+  box-shadow: 6px 6px 0 var(--black);
 }
 
 .hero-badge {
