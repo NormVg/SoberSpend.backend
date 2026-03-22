@@ -26,7 +26,8 @@
       <div class="cta-grid">
 
         <!-- 1. DOWNLOAD PPT -->
-        <a href="/SoberSpend-Presentation.pptx" download class="cta-card" style="background: #DFFF00; color:#111;">
+        <a href="/SoberSpend-Presentation.pptx" download class="cta-card"
+          style="background: var(--yellow); color: var(--black);">
           <div class="cta-icon">📊</div>
           <div class="cta-content">
             <div class="cta-title">PRESENTATION</div>
@@ -36,7 +37,8 @@
         </a>
 
         <!-- 2. VIEW VIDEO -->
-        <button class="cta-card" style="background:#00FFFF; color:#111; border:none; cursor:pointer; text-align:left;"
+        <button class="cta-card"
+          style="background: var(--cyan); color: var(--black); border:3px solid var(--black); cursor:pointer; text-align:left;"
           @click="showVideo = true">
           <div class="cta-icon">▶</div>
           <div class="cta-content">
@@ -47,7 +49,7 @@
         </button>
 
         <!-- 3. DOWNLOAD APK -->
-        <a href="/SoberSpend.apk" download class="cta-card" style="background:#FF85A2; color:#111;">
+        <a href="/SoberSpend.apk" download class="cta-card" style="background: var(--pink); color: var(--black);">
           <div class="cta-icon">📱</div>
           <div class="cta-content">
             <div class="cta-title">ANDROID APK</div>
@@ -128,9 +130,9 @@ useHead({
 }
 
 :root {
-  --black: #0A0A0A;
-  --surface: #111111;
-  --white: #F5F5F5;
+  --black: #111111;
+  --surface: #F9F9F9;
+  --white: #FFFFFF;
   --cyan: #00FFFF;
   --yellow: #DFFF00;
   --pink: #FF85A2;
@@ -143,14 +145,17 @@ html {
 }
 
 body {
-  background: var(--black);
-  color: var(--white);
+  background: var(--surface);
+  color: var(--black);
   font-family: var(--font-body);
   min-height: 100vh;
 }
 
 .cyan {
-  color: var(--cyan);
+  color: var(--black);
+  background: var(--cyan);
+  padding: 0 4px;
+  display: inline-block;
 }
 
 /* NAV */
@@ -159,23 +164,27 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 20px 48px;
-  border-bottom: 2px solid #1A1A1A;
+  border-bottom: 3px solid var(--black);
+  background: var(--white);
 }
 
 .nav-logo {
   font-family: var(--font-display);
   font-size: 28px;
   letter-spacing: 1px;
+  color: var(--black);
 }
 
 .nav-tag {
   font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #555;
-  border: 1px solid #222;
+  color: var(--black);
+  border: 2px solid var(--black);
   padding: 6px 14px;
   border-radius: 999px;
+  background: var(--yellow);
+  font-weight: 700;
 }
 
 /* HERO */
@@ -185,15 +194,18 @@ body {
 }
 
 .hero-badge {
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--cyan);
-  border: 1px solid var(--cyan);
+  color: var(--black);
+  border: 2px solid var(--black);
+  background: var(--pink);
   padding: 6px 16px;
   border-radius: 999px;
   display: inline-block;
   margin-bottom: 28px;
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .hero-title {
@@ -201,12 +213,14 @@ body {
   font-size: clamp(72px, 10vw, 160px);
   line-height: 0.9;
   margin-bottom: 28px;
+  color: var(--black);
 }
 
 .hero-sub {
   font-size: 18px;
-  color: #777;
+  color: #333;
   line-height: 1.7;
+  font-weight: 500;
 }
 
 /* 3 CTA CARDS */
@@ -226,8 +240,8 @@ body {
   flex-direction: column;
   gap: 16px;
   padding: 36px 28px;
-  border: 3px solid #000;
-  box-shadow: 5px 5px 0 #000;
+  border: 3px solid var(--black);
+  box-shadow: 5px 5px 0 var(--black);
   text-decoration: none;
   transition: transform 0.15s, box-shadow 0.15s;
   font-family: inherit;
@@ -235,7 +249,7 @@ body {
 
 .cta-card:hover {
   transform: translate(-3px, -3px);
-  box-shadow: 8px 8px 0 #000;
+  box-shadow: 8px 8px 0 var(--black);
 }
 
 .cta-icon {
@@ -251,18 +265,21 @@ body {
   font-size: 28px;
   letter-spacing: 1px;
   margin-bottom: 8px;
+  color: var(--black);
 }
 
 .cta-body {
-  font-size: 14px;
-  opacity: 0.7;
+  font-size: 15px;
+  opacity: 0.85;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--black);
 }
 
 .cta-arrow {
   font-family: var(--font-display);
   font-size: 36px;
+  color: var(--black);
 }
 
 /* RISK SECTION */
@@ -271,10 +288,11 @@ body {
 }
 
 .risk-label {
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #444;
+  color: var(--black);
   margin-bottom: 16px;
 }
 
@@ -289,8 +307,9 @@ body {
   font-family: var(--font-display);
   font-size: 18px;
   letter-spacing: 1px;
-  border: 2px solid #000;
-  box-shadow: 3px 3px 0 #000;
+  border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  font-weight: 700;
 }
 
 .risk-tag.broke {
@@ -332,7 +351,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,28 +361,28 @@ body {
 
 .modal-box {
   width: min(860px, 93vw);
-  background: #111;
-  border: 3px solid #000;
-  box-shadow: 8px 8px 0 #000;
+  background: var(--white);
+  border: 3px solid var(--black);
+  box-shadow: 8px 8px 0 var(--black);
   overflow: hidden;
 }
 
 .modal-close {
   width: 100%;
   padding: 14px 20px;
-  background: #1A1A1A;
+  background: var(--surface);
   border: none;
-  border-bottom: 2px solid #222;
-  color: #888;
+  border-bottom: 3px solid var(--black);
+  color: var(--black);
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 2px;
   cursor: pointer;
   text-align: left;
 }
 
 .modal-close:hover {
-  color: var(--white);
+  background: var(--cyan);
 }
 
 .video-placeholder {
@@ -379,15 +398,17 @@ body {
 /* FOOTER */
 .footer {
   padding: 28px 48px;
-  border-top: 2px solid #1A1A1A;
+  border-top: 3px solid var(--black);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .footer-sub {
-  font-size: 12px;
-  color: #444;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
   letter-spacing: 1px;
 }
 
