@@ -26,8 +26,7 @@
       <div class="cta-grid">
 
         <!-- 1. DOWNLOAD PPT -->
-        <a href="/SoberSpend-Presentation.pptx" download class="cta-card"
-          style="background: var(--yellow); color: var(--black);">
+        <a href="/SpendSober.pptx" download class="cta-card" style="background: var(--yellow); color: var(--black);">
           <div class="cta-icon">📊</div>
           <div class="cta-content">
             <div class="cta-title">PRESENTATION</div>
