@@ -9,17 +9,21 @@
 
     <!-- HERO -->
     <section class="hero">
-      <img src="/ss-logo.png" alt="SoberSpend Logo" class="hero-logo" />
-      <div class="hero-badge">✦ SMART FINANCE APP</div>
-      <h1 class="hero-title">
-        STOP<br />
-        SPENDING<br />
-        LIKE<br />
-        <span class="cyan">YOU'RE RICH.</span>
-      </h1>
-      <p class="hero-sub">
-        Intelligent UPI payment interceptor. See your risk score <em>before</em> you tap pay.
-      </p>
+      <div class="hero-content">
+        <div class="hero-badge">✦ SMART FINANCE APP</div>
+        <h1 class="hero-title">
+          STOP<br />
+          SPENDING<br />
+          LIKE<br />
+          <span class="cyan">YOU'RE RICH.</span>
+        </h1>
+        <p class="hero-sub">
+          Intelligent UPI payment interceptor. See your risk score <em>before</em> you tap pay.
+        </p>
+      </div>
+      <div class="hero-graphics">
+        <img src="/ss-logo.png" alt="SoberSpend Logo" class="hero-logo" />
+      </div>
     </section>
 
     <!-- 3 CTA CARDS -->
@@ -212,19 +216,31 @@ body {
 
 /* HERO */
 .hero {
-  padding: 80px 24px 60px;
-  text-align: center;
-  max-width: 900px;
+  padding: 80px 48px 48px;
+  max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  gap: 48px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column-reverse;
+    text-align: center;
+    padding: 60px 24px 40px;
+  }
 }
 
 .hero-logo {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 24px;
-  border: 4px solid var(--black);
-  border-radius: 20px;
-  box-shadow: 4px 4px 0 var(--black);
+  width: 180px;
+  height: 180px;
+  margin: 0;
+  border: 6px solid var(--black);
+  border-radius: 40px;
+  box-shadow: 8px 8px 0 var(--black);
 }
 
 .hero-badge {
