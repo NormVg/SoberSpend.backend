@@ -104,8 +104,8 @@
 <script setup lang="ts">
 const showVideo = ref(false)
 
-// 👇 Replace this with your actual YouTube embed URL or direct video URL
-const videoSrc = 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+// 👇 The actual YouTube embed URL
+const videoSrc = 'https://www.youtube.com/embed/drfokWK9iyQ'
 
 useHead({
   title: 'SoberSpend — Stop Spending Like You\'re Rich',
