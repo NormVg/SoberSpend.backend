@@ -9,6 +9,7 @@
 
     <!-- HERO -->
     <section class="hero">
+      <img src="/ss-logo.png" alt="SoberSpend Logo" class="hero-logo" />
       <div class="hero-badge">✦ SMART FINANCE APP</div>
       <h1 class="hero-title">
         STOP<br />
@@ -203,10 +204,27 @@ body {
   font-weight: 700;
 }
 
+.nav-link {
+  font-weight: 700;
+  text-decoration: underline;
+  text-transform: uppercase;
+}
+
 /* HERO */
 .hero {
-  padding: 80px 48px 48px;
+  padding: 80px 24px 60px;
+  text-align: center;
   max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-logo {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  border: 4px solid var(--black);
+  border-radius: 20px;
+  box-shadow: 4px 4px 0 var(--black);
 }
 
 .hero-badge {
