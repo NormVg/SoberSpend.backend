@@ -48,7 +48,8 @@
         </button>
 
         <!-- 3. DOWNLOAD APK -->
-        <a href="/SoberSpend.apk" download class="cta-card" style="background: var(--pink); color: var(--black);">
+        <a href="https://github.com/NormVg/SoberSpend.app/releases/download/sddd/application-346b777e-dd3c-422f-8fdd-f31c31da1f6c.apk"
+          download class="cta-card" style="background: var(--pink); color: var(--black);">
           <div class="cta-icon">📱</div>
           <div class="cta-content">
             <div class="cta-title">ANDROID APK</div>
