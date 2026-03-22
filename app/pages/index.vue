@@ -9,7 +9,7 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-badge">✦ AI-POWERED FINANCE APP</div>
+      <div class="hero-badge">✦ SMART FINANCE APP</div>
       <h1 class="hero-title">
         STOP<br />
         SPENDING<br />
@@ -17,7 +17,7 @@
         <span class="cyan">YOU'RE RICH.</span>
       </h1>
       <p class="hero-sub">
-        AI-powered UPI payment interceptor. See your risk score <em>before</em> you tap pay.
+        Intelligent UPI payment interceptor. See your risk score <em>before</em> you tap pay.
       </p>
     </section>
 
@@ -110,7 +110,7 @@ const videoSrc = 'https://www.youtube.com/embed/dQw4w9WgXcQ'
 useHead({
   title: 'SoberSpend — Stop Spending Like You\'re Rich',
   meta: [
-    { name: 'description', content: 'AI-powered UPI payment interceptor. See your risk score before you pay.' },
+    { name: 'description', content: 'Intelligent UPI payment interceptor. See your risk score before you pay.' },
   ],
   link: [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
