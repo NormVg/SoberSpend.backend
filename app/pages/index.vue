@@ -555,12 +555,42 @@ body {
     padding-right: 20px;
   }
 
+  .nav-logo {
+    font-size: 24px;
+  }
+
+  .nav-tag {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+
   .cta-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .hero {
     padding-top: 48px;
+  }
+
+  .risk-strip {
+    justify-content: center;
+  }
+
+  .gallery-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .gallery-img {
+    height: 380px;
+    border-radius: 16px;
+  }
+
+  .footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
   }
 }
 </style>
