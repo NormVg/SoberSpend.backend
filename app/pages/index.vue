@@ -76,7 +76,19 @@
     <section class="gallery-section">
       <div class="gallery-inner">
         <h2 class="section-title">See the <span class="cyan">Reality.</span></h2>
-        <div class="gallery-scroll">
+      </div>
+      <div class="gallery-scroll">
+        <div class="gallery-track">
+          <!-- Set 1 -->
+          <img src="/show/screen-1.jpg" alt="App Screenshot 1" class="gallery-img" />
+          <img src="/show/screen-3.jpg" alt="App Screenshot 3" class="gallery-img" />
+          <img src="/show/screen-4.jpg" alt="App Screenshot 4" class="gallery-img" />
+          <img src="/show/screen-5.jpg" alt="App Screenshot 5" class="gallery-img" />
+          <img src="/show/screen-6.jpg" alt="App Screenshot 6" class="gallery-img" />
+          <img src="/show/screen-7.jpg" alt="App Screenshot 7" class="gallery-img" />
+          <img src="/show/screen-8.jpg" alt="App Screenshot 8" class="gallery-img" />
+
+          <!-- Set 2 (for seamless loop) -->
           <img src="/show/screen-1.jpg" alt="App Screenshot 1" class="gallery-img" />
           <img src="/show/screen-3.jpg" alt="App Screenshot 3" class="gallery-img" />
           <img src="/show/screen-4.jpg" alt="App Screenshot 4" class="gallery-img" />
@@ -431,15 +443,30 @@ body {
 }
 
 .gallery-scroll {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 24px 0 48px;
-  scrollbar-width: none;
+  width: 100%;
 }
 
-.gallery-scroll::-webkit-scrollbar {
-  display: none;
+.gallery-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scrollMarquee 30s linear infinite;
+}
+
+.gallery-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollMarquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-50% - 12px));
+  }
 }
 
 .gallery-img {
