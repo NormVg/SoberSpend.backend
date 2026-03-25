@@ -12,13 +12,13 @@
       <div class="hero-content">
         <div class="hero-badge">✦ SMART FINANCE APP</div>
         <h1 class="hero-title">
-          STOP<br />
-          SPENDING<br />
-          LIKE<br />
-          <span class="cyan">YOU'RE RICH.</span>
+          SPEND<br />
+          WITH<br />
+          <span class="cyan">INTENTION.</span>
         </h1>
         <p class="hero-sub">
-          Intelligent UPI payment interceptor. See your risk score <em>before</em> you tap pay.
+          The intelligent UPI interceptor that helps you make confident, mindful financial decisions <em>before</em> you
+          tap pay.
         </p>
       </div>
       <div class="hero-graphics">
@@ -32,7 +32,9 @@
 
         <!-- 1. DOWNLOAD PPT -->
         <a href="/SpendSober.pptx" download class="cta-card" style="background: var(--yellow); color: var(--black);">
-          <div class="cta-icon">📊</div>
+          <div class="cta-icon">
+            <FileText :size="40" :stroke-width="2.5" />
+          </div>
           <div class="cta-content">
             <div class="cta-title">PRESENTATION</div>
             <div class="cta-body">Download our full project pitch deck</div>
@@ -44,7 +46,9 @@
         <button class="cta-card"
           style="background: var(--cyan); color: var(--black); border:3px solid var(--black); cursor:pointer; text-align:left;"
           @click="showVideo = true">
-          <div class="cta-icon">▶</div>
+          <div class="cta-icon">
+            <Play :size="40" :stroke-width="2.5" />
+          </div>
           <div class="cta-content">
             <div class="cta-title">DEMO VIDEO</div>
             <div class="cta-body">Watch SoberSpend in action</div>
@@ -55,7 +59,9 @@
         <!-- 3. DOWNLOAD APK -->
         <a href="https://github.com/NormVg/SoberSpend.app/releases/download/sddd/application-346b777e-dd3c-422f-8fdd-f31c31da1f6c.apk"
           download class="cta-card" style="background: var(--pink); color: var(--black);">
-          <div class="cta-icon">📱</div>
+          <div class="cta-icon">
+            <Smartphone :size="40" :stroke-width="2.5" />
+          </div>
           <div class="cta-content">
             <div class="cta-title">ANDROID APK</div>
             <div class="cta-body">Install & try the app right now</div>
@@ -123,15 +129,17 @@
 </template>
 
 <script setup lang="ts">
+import { FileText, Play, Smartphone } from 'lucide-vue-next';
+
 const showVideo = ref(false)
 
 // 👇 The actual YouTube embed URL
 const videoSrc = 'https://www.youtube.com/embed/drfokWK9iyQ'
 
 useHead({
-  title: 'SoberSpend — Stop Spending Like You\'re Rich',
+  title: 'SoberSpend — Spend With Intention',
   meta: [
-    { name: 'description', content: 'Intelligent UPI payment interceptor. See your risk score before you pay.' },
+    { name: 'description', content: 'The intelligent UPI interceptor that helps you make mindful financial decisions before you pay.' },
   ],
   link: [
     { rel: 'icon', type: 'image/png', href: '/ss-logo.png' },
